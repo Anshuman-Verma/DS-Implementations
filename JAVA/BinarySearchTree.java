@@ -17,6 +17,7 @@ class BST{
 			data = x;
 			left = right = null;
 		}
+		
 	}
 	
 	
@@ -46,11 +47,11 @@ class BST{
 	
  
     // A utility function to do inorder traversal of BST
-    void inorder(Node root) {
-        if (root != null) {
-            inorder(root.left);
-            System.out.print(root.data+ " ");
-            inorder(root.right);
+    void inorder(Node temp) {
+        if (temp != null) {
+            inorder(temp.left);
+            System.out.print(temp.data+ " ");
+            inorder(temp.right);
         }
     }
 	
@@ -103,12 +104,15 @@ class BST{
 		return count;
 	}
 	
+	
+	
 	void deleteNode(int x){
 		deleteNodeRec(root, x);
 	}
 	
 	Node deleteNodeRec(Node temp,int x){
 		
+		// no child present
 		if(root==null)
 			return root;
 		
@@ -118,6 +122,8 @@ class BST{
 			temp.right = deleteNodeRec(temp.right, x);
 		
 		else{
+			
+			//  case when only a single child is present
 			if(temp.left==null)
 				return temp.right;
 			else if(temp.right==null)
@@ -138,9 +144,69 @@ class BST{
 		return temp.data;
 	}
 	
+	int maxValue(Node temp){
+		while(temp.right!=null)
+			temp  = temp.right;
+		return temp.data;
+	}
+	
+	
+	// a function to return the INORDER predecessor Node and successor Node of a key,  in case key is not present in the tree this prints the value within this node should lie.
+	
+	Node pre = new Node(-1), suc =  new Node(-1); // Nodes to store predecessor and successor
+	
+	void findPreSuc(Node temp, int key){
+		
+		if(temp==null)
+			return;
+		
+		//  key is found !
+		if(temp.data==key){
+	
+			//max value in left subtree is predecessor
+			if(temp.left!=null){
+				Node trav = temp.left;
+				do{
+					pre = trav;
+					trav = trav.right;
+				}
+				while(trav.right!=null);
+			}
+			
+			// min value in right subtree is successor
+			if(temp.right!=null){
+				Node trav = temp.right;
+				do{
+					suc = trav;
+					trav = trav.left;
+				}
+				while(trav.left!=null);
+			}
+			return;
+		}
 		
 		
+		// when key is greater than temp's key, go to right subtree
+		if(temp.data < key){
+			pre = temp;
+			findPreSuc(temp.right, key);
+		}
+		
+		
+		// else go to right subtree
+		else {
+			suc =  temp;
+			findPreSuc(temp.left, key);
+		}
+		 
+		
+	}
+	
+	
+	
+	
 }
+
 
 class BinarySearchTree{
 	public static void main(String args[]){
@@ -158,6 +224,8 @@ class BinarySearchTree{
             System.out.println("3. search");
             System.out.println("4. count nodes");
             System.out.println("5. check empty"); 
+			System.out.println("6. display predecessor & successor"); 
+
  
             int choice = scan.nextInt();            
             switch (choice)
@@ -181,14 +249,31 @@ class BinarySearchTree{
                 System.out.println("Empty status = "+ tree.isEmpty());
                 break;
 				
+			case 6 :  
+				try{
+				tree.findPreSuc(tree.root, scan.nextInt() );
+				if(tree.pre!=null && tree.suc!=null)
+					System.out.println( "Predecessor: " + tree.pre.data + "\n Successor: " +tree.suc.data);
+				else if(tree.pre!=null)
+					System.out.println( "Predecessor: " + tree.pre.data);
+				else if(tree.suc!=null)
+					System.out.println( "Successor: " + tree.suc.data);
+				else 
+					System.out.println( "No predecessor or successor");
+				}
+				catch(Exception e){
+					System.out.println("something wrong");
+				}
+                break;
+				
             default : 
                 System.out.println("Wrong Entry \n");
                 break;   
             }
-			/*System.out.print("\nPost order : ");  
+			System.out.print("\nPost order : ");  
 			tree.postorder(tree.root);
             System.out.print("\nPre order : ");
-            tree.preorder(tree.root);*/
+            tree.preorder(tree.root);
             System.out.print("\nIn order : ");
             tree.inorder(tree.root);
  
