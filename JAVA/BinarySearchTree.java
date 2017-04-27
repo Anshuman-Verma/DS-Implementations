@@ -17,11 +17,10 @@ class BST{
 			data = x;
 			left = right = null;
 		}
-		
 	}
 	
 	
-	void insert(int key) {
+	void insert(int key){
        root = insertRec(root, key);
     }
      
@@ -39,7 +38,7 @@ class BST{
             root.left = insertRec(root.left, key);
         else if (key > root.data)
             root.right = insertRec(root.right, key);
- 
+
         /* return the (unchanged) node pointer */
         return root;
     }
